@@ -1,0 +1,6 @@
+configuration=Last Block + LayerNorm
+clip_finetune_last_n=1
+clip_train_layernorm=true
+patch_shuffle_prob=0.0
+semantic_dropout=0.0
+semantic_token_mask_prob=0.0

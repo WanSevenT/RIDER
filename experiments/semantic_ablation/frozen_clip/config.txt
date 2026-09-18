@@ -1,0 +1,5 @@
+configuration=Frozen CLIP
+clip_finetune_last_n=0
+patch_shuffle_prob=0.0
+semantic_dropout=0.0
+semantic_token_mask_prob=0.0

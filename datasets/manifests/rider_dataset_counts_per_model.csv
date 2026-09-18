@@ -1,0 +1,31 @@
+split,model,source,real,fake,total
+train,ldm,Co-Spy-Bench (cc3m/flickr),10000,10000,20000
+train,progan,CNNDetection,40000,40000,80000
+train,sd1.4,Co-Spy-Bench (cc3m/flickr),9987,10000,19987
+train,sd2.1,Co-Spy-Bench (cc3m/flickr),10000,10000,20000
+train,sdxl,Co-Spy-Bench (cc3m/flickr),10000,10000,20000
+val,ldm,Co-Spy-Bench (cc3m/flickr),200,200,400
+val,progan,CNNDetection,800,800,1600
+val,sd1.4,Co-Spy-Bench (cc3m/flickr),197,200,397
+val,sd2.1,Co-Spy-Bench (cc3m/flickr),200,200,400
+val,sdxl,Co-Spy-Bench (cc3m/flickr),200,200,400
+test,biggan,CNNDetection,2000,2000,4000
+test,crn,CNNDetection,6382,6382,12764
+test,cyclegan,CNNDetection,1868,1868,3736
+test,deepfake,CNNDetection,2707,2698,5405
+test,flux,Co-Spy-Bench (cc3m/flickr),1996,2000,3996
+test,gaugan,CNNDetection,5000,5000,10000
+test,gpt-image1.5,ComplexDataLab/OpenFake,2000,2000,4000
+test,gpt-image2.0,GPT-Image-2 Twitter,2000,2000,4000
+test,imle,CNNDetection,6382,6382,12764
+test,ldm,Co-Spy-Bench (cc3m/flickr),1999,2000,3999
+test,progan,CNNDetection,4000,4000,8000
+test,san,CNNDetection,219,219,438
+test,sd1.4,Co-Spy-Bench (cc3m/flickr),1987,2000,3987
+test,sd2.1,Co-Spy-Bench (cc3m/flickr),1979,2000,3979
+test,sd3.5,Co-Spy-Bench (cc3m/flickr),2000,2000,4000
+test,sdxl,Co-Spy-Bench (cc3m/flickr),2000,2000,4000
+test,seeingdark,CNNDetection (SITD/SeeingDark),180,180,360
+test,stargan,CNNDetection,1999,1999,3998
+test,stylegan,CNNDetection,5991,5991,11982
+test,stylegan2,CNNDetection,7988,7988,15976

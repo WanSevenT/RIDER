@@ -1,0 +1,6 @@
+scope,num_datasets_or_settings,macro_acc,macro_ap,notes
+all_test_datasets,20,87.48,95.26,Final RIDER result reported in the manuscript
+unseen_datasets,15,85.33,94.14,Datasets absent from Phase-I training
+image_perturbations,11,83.11,90.75,Average over the final robustness protocol
+semantic_expert,20,85.02,93.82,Final Phase-I semantic checkpoint used by RIDER
+artifact_expert,20,79.15,85.95,Final Phase-I artifact checkpoint used by RIDER

@@ -1,0 +1,35 @@
+from pathlib import Path
+import csv, json
+import torch
+
+ROOT=Path(__file__).resolve().parents[1]
+
+def test_compact_checkpoint_metadata():
+    s=torch.load(ROOT/'weights/semantic_best.pth',map_location='cpu',weights_only=True)
+    a=torch.load(ROOT/'weights/artifact_best.pth',map_location='cpu',weights_only=True)
+    f=torch.load(ROOT/'weights/fusion_best.pth',map_location='cpu',weights_only=True)
+    assert s['checkpoint_type']=='semantic_delta'
+    assert s['base_clip_model']=='ViT-L/14'
+    assert s['metadata']['epoch']==5
+    assert a['checkpoint_type']=='artifact_inference'
+    assert a['metadata']['epoch']==20
+    assert a['metadata']['artifact_build_meta']['image_size']==224
+    assert a['metadata']['artifact_build_meta']['npr_scales']==[0.25,0.5,0.75]
+    assert f['checkpoint_type']=='rider_fusion_delta'
+    assert f['epoch']==4
+    assert f['metadata']['load_order'][-1]=='fusion_best.pth'
+
+def test_manifest_audit_counts():
+    audit=json.load(open(ROOT/'datasets/manifests/dataset_audit.json',encoding='utf-8'))
+    assert audit['num_images']==284568
+    assert audit['split_counts']=={'train':159987,'val':3197,'test':121384}
+
+def test_results_directory_is_compact():
+    files=sorted(p.name for p in (ROOT/'results').iterdir() if p.is_file())
+    assert files==['ablation_results.csv','main_results.csv','robustness_results.csv']
+    assert not any(p.is_dir() for p in (ROOT/'results').iterdir())
+
+
+def test_ablation_configs_live_under_experiments():
+    assert (ROOT/'experiments'/'semantic_ablation').is_dir()
+    assert (ROOT/'experiments'/'artifact_ablation').is_dir()

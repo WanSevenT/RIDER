@@ -1,0 +1,29 @@
+# Local datasets
+dataset/
+datasets/raw/
+
+# Training outputs
+checkpoints/
+pretrained_models/
+outputs/
+verify/
+
+# Generated CLIP-NN scores
+clip_nn_train.csv
+clip_nn_val.csv
+clip_nn_test.csv
+
+# Python/cache/editor
+__pycache__/
+*.py[cod]
+*.so
+.pytest_cache/
+.venv/
+venv/
+.env
+.vscode/
+.idea/
+.DS_Store
+
+# Logs
+*.log

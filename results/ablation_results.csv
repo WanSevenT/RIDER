@@ -1,0 +1,15 @@
+block,configuration,macro_acc,macro_ap
+Semantic Training Ablation,Frozen CLIP,81.39,91.73
+Semantic Training Ablation,Last Block + LayerNorm,84.14,94.51
+Semantic Training Ablation,Last Two Blocks,83.08,94.55
+Artifact Cue Design,Spectral + Haar,74.58,81.78
+Artifact Cue Design,+ Single-Scale NPR,78.17,85.49
+Artifact Cue Design,+ MS-NPR,78.26,84.80
+Artifact Cue Design,Large Six-Cue Model,76.25,85.25
+Expert Contribution,Final Semantic Expert,85.02,93.82
+Expert Contribution,Final Artifact Expert,79.15,85.95
+Expert Contribution,Full RIDER,87.48,95.26
+Fusion Design,Fixed 0.5 Logit Average,86.46,95.24
+Fusion Design,"CLIP-NN + Safety, No Aux.",85.95,94.79
+Fusion Design,"CLIP-NN + Safety + Aux.",87.16,95.41
+Fusion Design,Final Tuned RIDER,87.48,95.26

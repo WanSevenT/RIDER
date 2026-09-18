@@ -1,0 +1,52 @@
+# Reference snapshot of the final RIDER configuration.
+# The executable commands are in scripts/*.sh.
+experiment:
+  seed: 42
+  reported_macro_acc: 87.48
+  reported_macro_ap: 95.26
+semantic:
+  backbone: ViT-L/14
+  epochs: 5
+  image_size: 224
+  batch_size: 32
+  finetune_last_n: 1
+  clip_lr: 1.0e-5
+  classifier_lr: 1.0e-7
+  patch_shuffle_prob: 0.0
+  semantic_dropout: 0.0
+  semantic_token_mask_prob: 0.0
+artifact:
+  epochs: 20
+  image_size: 224
+  batch_size: 16
+  branches: [spectral_mag, wavelet, npr]
+  npr_scales: [0.25, 0.5, 0.75]
+  normalized_artifact_inputs: true
+  base_lr: 1.0e-4
+  supcon_weight: 0.05
+  domain_adv_weight: 0.05
+  hard_mining_dynamic_boost: 2.0
+clip_nn:
+  k: 10
+  max_per_model_class: 500
+  tau: 40.0
+  bias: 0.0
+fusion:
+  epochs: 20
+  selected_epoch: 4
+  batch_size: 128
+  checkpoint_selection: fixed05
+  macro_loss_weight: 1.0
+  sample_loss_weight: 0.0
+  bias_reg_weight: 0.002
+  regret_weight: 0.5
+  branch_consistency_weight: 0.10
+  router_supervision_weight: 1.0
+  router_target_mode: model_macroacc
+  regret_target_mode: model_macroacc
+  mix_space: clipped_logit
+  semantic_logit_clip: 5.0
+  artifact_logit_clip: 3.0
+  output_mix_mode: learned_gate_with_semantic_safety
+  semantic_safe_semantic_prob_threshold: 0.50
+  semantic_safe_artifact_prob_threshold: 0.30

@@ -1,0 +1,368 @@
+{
+  "dataset_root": "<DATASET_ROOT>",
+  "sha256_enabled": true,
+  "num_images": 284568,
+  "split_counts": {
+    "train": 159987,
+    "val": 3197,
+    "test": 121384
+  },
+  "split_label_counts": {
+    "train": {
+      "real": 79987,
+      "fake": 80000,
+      "total": 159987
+    },
+    "val": {
+      "real": 1597,
+      "fake": 1600,
+      "total": 3197
+    },
+    "test": {
+      "real": 60677,
+      "fake": 60707,
+      "total": 121384
+    }
+  },
+  "models_by_split": {
+    "train": [
+      "ldm",
+      "progan",
+      "sd1.4",
+      "sd2.1",
+      "sdxl"
+    ],
+    "val": [
+      "ldm",
+      "progan",
+      "sd1.4",
+      "sd2.1",
+      "sdxl"
+    ],
+    "test": [
+      "biggan",
+      "crn",
+      "cyclegan",
+      "deepfake",
+      "flux",
+      "gaugan",
+      "gpt-image1.5",
+      "gpt-image2.0",
+      "imle",
+      "ldm",
+      "progan",
+      "san",
+      "sd1.4",
+      "sd2.1",
+      "sd3.5",
+      "sdxl",
+      "seeingdark",
+      "stargan",
+      "stylegan",
+      "stylegan2"
+    ]
+  },
+  "source_subsets_found": [],
+  "sample_paths": {
+    "train/ldm/real": [
+      "ldm/0_real/000000000384.jpg",
+      "ldm/0_real/000000000490.jpg",
+      "ldm/0_real/000000000491.jpg"
+    ],
+    "train/ldm/fake": [
+      "ldm/1_fake/000000000009.jpg",
+      "ldm/1_fake/000000000025.jpg",
+      "ldm/1_fake/000000000030.jpg"
+    ],
+    "train/progan/real": [
+      "progan/car/0_real/08855.png",
+      "progan/car/0_real/08856.png",
+      "progan/car/0_real/08857.png"
+    ],
+    "train/progan/fake": [
+      "progan/car/1_fake/08855.png",
+      "progan/car/1_fake/08856.png",
+      "progan/car/1_fake/08857.png"
+    ],
+    "train/sd1.4/real": [
+      "sd1.4/0_real/0.jpg",
+      "sd1.4/0_real/000000170129.jpg",
+      "sd1.4/0_real/000000170130.jpg"
+    ],
+    "train/sd1.4/fake": [
+      "sd1.4/1_fake/0.png",
+      "sd1.4/1_fake/1.png",
+      "sd1.4/1_fake/10.png"
+    ],
+    "train/sd2.1/real": [
+      "sd2.1/0_real/000000069837.jpg",
+      "sd2.1/0_real/000000069839.jpg",
+      "sd2.1/0_real/000000069842.jpg"
+    ],
+    "train/sd2.1/fake": [
+      "sd2.1/1_fake/000000000009.jpg",
+      "sd2.1/1_fake/000000000025.jpg",
+      "sd2.1/1_fake/000000000030.jpg"
+    ],
+    "train/sdxl/real": [
+      "sdxl/0_real/000000119962.jpg",
+      "sdxl/0_real/000000119964.jpg",
+      "sdxl/0_real/000000119965.jpg"
+    ],
+    "train/sdxl/fake": [
+      "sdxl/1_fake/000000000009.jpg",
+      "sdxl/1_fake/000000000025.jpg",
+      "sdxl/1_fake/000000000030.jpg"
+    ],
+    "val/ldm/real": [
+      "ldm/0_real/000000563545.jpg",
+      "ldm/0_real/000000563606.jpg",
+      "ldm/0_real/000000563651.jpg"
+    ],
+    "val/ldm/fake": [
+      "ldm/1_fake/000000375892.jpg",
+      "ldm/1_fake/000000376047.jpg",
+      "ldm/1_fake/000000376065.jpg"
+    ],
+    "val/progan/real": [
+      "progan/car/0_real/00091.png",
+      "progan/car/0_real/00226.png",
+      "progan/car/0_real/00404.png"
+    ],
+    "val/progan/fake": [
+      "progan/car/1_fake/00091.png",
+      "progan/car/1_fake/00226.png",
+      "progan/car/1_fake/00404.png"
+    ],
+    "val/sd1.4/real": [
+      "sd1.4/0_real/6230.jpg",
+      "sd1.4/0_real/6231.jpg",
+      "sd1.4/0_real/6232.jpg"
+    ],
+    "val/sd1.4/fake": [
+      "sd1.4/1_fake/2000.png",
+      "sd1.4/1_fake/2001.png",
+      "sd1.4/1_fake/2002.png"
+    ],
+    "val/sd2.1/real": [
+      "sd2.1/0_real/000000567518.jpg",
+      "sd2.1/0_real/000000567552.jpg",
+      "sd2.1/0_real/000000567566.jpg"
+    ],
+    "val/sd2.1/fake": [
+      "sd2.1/1_fake/000000412377.jpg",
+      "sd2.1/1_fake/000000412431.jpg",
+      "sd2.1/1_fake/000000412440.jpg"
+    ],
+    "val/sdxl/real": [
+      "sdxl/0_real/000000570423.jpg",
+      "sdxl/0_real/000000570543.jpg",
+      "sdxl/0_real/000000570545.jpg"
+    ],
+    "val/sdxl/fake": [
+      "sdxl/1_fake/000000527083.jpg",
+      "sdxl/1_fake/000000527155.jpg",
+      "sdxl/1_fake/000000527216.jpg"
+    ],
+    "test/biggan/real": [
+      "biggan/0_real/0--n01440764_5043.png",
+      "biggan/0_real/0--n01440764_8600.png",
+      "biggan/0_real/10--n01530575_10395.png"
+    ],
+    "test/biggan/fake": [
+      "biggan/1_fake/00000701.png",
+      "biggan/1_fake/00000737.png",
+      "biggan/1_fake/00001441.png"
+    ],
+    "test/crn/real": [
+      "crn/0_real/00100001.png",
+      "crn/0_real/00100002.png",
+      "crn/0_real/00100003.png"
+    ],
+    "test/crn/fake": [
+      "crn/1_fake/100001_output.png",
+      "crn/1_fake/100002_output.png",
+      "crn/1_fake/100003_output.png"
+    ],
+    "test/cyclegan/real": [
+      "cyclegan/apple/0_real/n07740461_10011_real.png",
+      "cyclegan/apple/0_real/n07740461_10080_real.png",
+      "cyclegan/apple/0_real/n07740461_10211_real.png"
+    ],
+    "test/cyclegan/fake": [
+      "cyclegan/apple/1_fake/n07749192_10081_fake.png",
+      "cyclegan/apple/1_fake/n07749192_1010_fake.png",
+      "cyclegan/apple/1_fake/n07749192_1011_fake.png"
+    ],
+    "test/deepfake/real": [
+      "deepfake/0_real/000_0066.png",
+      "deepfake/0_real/000_0319.png",
+      "deepfake/0_real/000_0347.png"
+    ],
+    "test/deepfake/fake": [
+      "deepfake/1_fake/000_003_0040.png",
+      "deepfake/1_fake/000_003_0057.png",
+      "deepfake/1_fake/000_003_0090.png"
+    ],
+    "test/flux/real": [
+      "flux/0_real/0.jpg",
+      "flux/0_real/1.jpg",
+      "flux/0_real/100.jpg"
+    ],
+    "test/flux/fake": [
+      "flux/1_fake/0.png",
+      "flux/1_fake/1.png",
+      "flux/1_fake/10.png"
+    ],
+    "test/gaugan/real": [
+      "gaugan/0_real/000000000139.png",
+      "gaugan/0_real/000000000285.png",
+      "gaugan/0_real/000000000632.png"
+    ],
+    "test/gaugan/fake": [
+      "gaugan/1_fake/000000000139.png",
+      "gaugan/1_fake/000000000285.png",
+      "gaugan/1_fake/000000000632.png"
+    ],
+    "test/gpt-image1.5/real": [
+      "gpt-image1.5/0_real/000000195583.jpg",
+      "gpt-image1.5/0_real/000000195594.jpg",
+      "gpt-image1.5/0_real/000000195595.jpg"
+    ],
+    "test/gpt-image1.5/fake": [
+      "gpt-image1.5/1_fake/00000.jpg",
+      "gpt-image1.5/1_fake/00001.jpg",
+      "gpt-image1.5/1_fake/00002.jpg"
+    ],
+    "test/gpt-image2.0/real": [
+      "gpt-image2.0/0_real/000000205848.jpg",
+      "gpt-image2.0/0_real/000000205850.jpg",
+      "gpt-image2.0/0_real/000000205854.jpg"
+    ],
+    "test/gpt-image2.0/fake": [
+      "gpt-image2.0/1_fake/2046380070747644095_3_2046379141344489472.jpg",
+      "gpt-image2.0/1_fake/2046383415159837034_3_2046381784552935424.jpg",
+      "gpt-image2.0/1_fake/2046383415159837034_3_2046382063813865472.jpg"
+    ],
+    "test/imle/real": [
+      "imle/0_real/00100001.png",
+      "imle/0_real/00100002.png",
+      "imle/0_real/00100003.png"
+    ],
+    "test/imle/fake": [
+      "imle/1_fake/00100001.png",
+      "imle/1_fake/00100002.png",
+      "imle/1_fake/00100003.png"
+    ],
+    "test/ldm/real": [
+      "ldm/0_real/3946.jpg",
+      "ldm/0_real/3948.jpg",
+      "ldm/0_real/3949.jpg"
+    ],
+    "test/ldm/fake": [
+      "ldm/1_fake/0.png",
+      "ldm/1_fake/1.png",
+      "ldm/1_fake/10.png"
+    ],
+    "test/progan/real": [
+      "progan/airplane/0_real/00049.png",
+      "progan/airplane/0_real/00069.png",
+      "progan/airplane/0_real/00253.png"
+    ],
+    "test/progan/fake": [
+      "progan/airplane/1_fake/00049.png",
+      "progan/airplane/1_fake/00069.png",
+      "progan/airplane/1_fake/00253.png"
+    ],
+    "test/san/real": [
+      "san/0_real/101085.png",
+      "san/0_real/101087.png",
+      "san/0_real/102061.png"
+    ],
+    "test/san/fake": [
+      "san/1_fake/BSD100_001_BIX4_G20R10P48_11_6_SR_x4.png",
+      "san/1_fake/BSD100_002_BIX4_G20R10P48_11_6_SR_x4.png",
+      "san/1_fake/BSD100_003_BIX4_G20R10P48_11_6_SR_x4.png"
+    ],
+    "test/sd1.4/real": [
+      "sd1.4/0_real/10003.jpg",
+      "sd1.4/0_real/10005.jpg",
+      "sd1.4/0_real/10006.jpg"
+    ],
+    "test/sd1.4/fake": [
+      "sd1.4/1_fake/3000.png",
+      "sd1.4/1_fake/3001.png",
+      "sd1.4/1_fake/3002.png"
+    ],
+    "test/sd2.1/real": [
+      "sd2.1/0_real/3949.jpg",
+      "sd2.1/0_real/3951.jpg",
+      "sd2.1/0_real/3953.jpg"
+    ],
+    "test/sd2.1/fake": [
+      "sd2.1/1_fake/0.png",
+      "sd2.1/1_fake/1.png",
+      "sd2.1/1_fake/10.png"
+    ],
+    "test/sd3.5/real": [
+      "sd3.5/0_real/000000000078.jpg",
+      "sd3.5/0_real/000000000081.jpg",
+      "sd3.5/0_real/000000000263.jpg"
+    ],
+    "test/sd3.5/fake": [
+      "sd3.5/1_fake/sd35__Architecture__Bridge__Brooklyn_Bridge__Brooklyn_Bridge4.png",
+      "sd3.5/1_fake/sd35__Architecture__Bridge__Brooklyn_Bridge__Brooklyn_Bridge_category1.png",
+      "sd3.5/1_fake/sd35__Architecture__Bridge__Brooklyn_Bridge__Brooklyn_Bridge_category3.png"
+    ],
+    "test/sdxl/real": [
+      "sdxl/0_real/000000000321.jpg",
+      "sdxl/0_real/000000000982.jpg",
+      "sdxl/0_real/000000001064.jpg"
+    ],
+    "test/sdxl/fake": [
+      "sdxl/1_fake/000000000077.jpg",
+      "sdxl/1_fake/000000000322.jpg",
+      "sdxl/1_fake/000000000781.jpg"
+    ],
+    "test/seeingdark/real": [
+      "seeingdark/0_real/10003_00_100_gt.png",
+      "seeingdark/0_real/10003_00_250_gt.png",
+      "seeingdark/0_real/10006_00_100_gt.png"
+    ],
+    "test/seeingdark/fake": [
+      "seeingdark/1_fake/10003_00_100_out.png",
+      "seeingdark/1_fake/10003_00_250_out.png",
+      "seeingdark/1_fake/10006_00_100_out.png"
+    ],
+    "test/stargan/real": [
+      "stargan/0_real/0000.png",
+      "stargan/0_real/0001.png",
+      "stargan/0_real/0002.png"
+    ],
+    "test/stargan/fake": [
+      "stargan/1_fake/0000.png",
+      "stargan/1_fake/0001.png",
+      "stargan/1_fake/0002.png"
+    ],
+    "test/stylegan/real": [
+      "stylegan/bedroom/0_real/00013.png",
+      "stylegan/bedroom/0_real/00014.png",
+      "stylegan/bedroom/0_real/00023.png"
+    ],
+    "test/stylegan/fake": [
+      "stylegan/bedroom/1_fake/001024.png",
+      "stylegan/bedroom/1_fake/001083.png",
+      "stylegan/bedroom/1_fake/001116.png"
+    ],
+    "test/stylegan2/real": [
+      "stylegan2/car/0_real/00000.png",
+      "stylegan2/car/0_real/00001.png",
+      "stylegan2/car/0_real/00002.png"
+    ],
+    "test/stylegan2/fake": [
+      "stylegan2/car/1_fake/000000.png",
+      "stylegan2/car/1_fake/000001.png",
+      "stylegan2/car/1_fake/000002.png"
+    ]
+  }
+}

@@ -1,0 +1,3 @@
+configuration=Spectral + Haar + Single-Scale NPR
+artifact_branches=spectral_mag wavelet npr
+npr_scales=0.5

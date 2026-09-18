@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+python src/train_rider.py \
+  --phase test \
+  --val_root ./dataset/val \
+  --test_root ./dataset/test \
+  --semantic_checkpoint ./weights/semantic_best.pth \
+  --artifact_checkpoint ./weights/artifact_best.pth \
+  --checkpoint ./weights/fusion_best.pth \
+  --save_dir ./outputs/eval \
+  --metrics_json ./outputs/eval/metrics.json \
+  --freeze_loaded_branches \
+  --batch_size 128 \
+  --num_workers 4 \
+  --device cuda:0 \
+  --use_amp \
+  --amp_dtype bf16 \
+  --threshold_metric macro_accuracy \
+  --checkpoint_selection fixed05 \
+  --artifact_branches spectral_mag wavelet npr \
+  --npr_scales 0.25 0.5 0.75 \
+  --fusion_mix_space clipped_logit \
+  --semantic_logit_clip 5.0 \
+  --artifact_logit_clip 3.0 \
+  --output_mix_mode learned_gate_with_semantic_safety \
+  --semantic_safe_semantic_prob_threshold 0.50 \
+  --semantic_safe_artifact_prob_threshold 0.30 \
+  --use_clip_nn_fusion \
+  --clip_nn_val_csv ./checkpoints/clip_nn_vitl14_k10_m500/clip_nn_val.csv \
+  --clip_nn_test_csv ./checkpoints/clip_nn_vitl14_k10_m500/clip_nn_test.csv \
+  --clip_nn_score_column clip_nn_logit \
+  --clip_nn_logit_clip 2.0

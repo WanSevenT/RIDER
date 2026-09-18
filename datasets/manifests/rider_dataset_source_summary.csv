@@ -1,0 +1,9 @@
+split,source,generator_groups,real,fake,total
+train,CNNDetection/ProGAN,ProGAN,40000,40000,80000
+train,Co-Spy-Bench (cc3m/flickr),LDM; SD1.4; SD2.1; SDXL,39987,40000,79987
+val,CNNDetection/ProGAN,ProGAN,800,800,1600
+val,Co-Spy-Bench (cc3m/flickr),LDM; SD1.4; SD2.1; SDXL,797,800,1597
+test,CNNDetection,BigGAN; CRN; CycleGAN; DeepFake; GauGAN; IMLE; ProGAN; SAN; SeeingDark/SITD; StarGAN; StyleGAN; StyleGAN2,44716,44707,89423
+test,Co-Spy-Bench (cc3m/flickr),FLUX; LDM; SD1.4; SD2.1; SD3.5; SDXL,11961,12000,23961
+test,ComplexDataLab/OpenFake,GPT-image1.5,2000,2000,4000
+test,GPT-Image-2 Twitter,GPT-image2.0,2000,2000,4000
