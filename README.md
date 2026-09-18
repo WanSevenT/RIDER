@@ -26,6 +26,7 @@ results/robustness_results.csv
 
 ```text
 RIDER/
+├── environment_reference.txt  # Tested experiment environment
 ├── configs/        # Final configuration snapshot
 ├── datasets/       # Dataset documentation and exact sample manifests
 ├── experiments/    # Controlled ablation configurations
@@ -40,22 +41,39 @@ RIDER/
 
 ## Installation
 
-Create an environment and install the required packages:
+### Tested environment
+
+The reported experiments were run with the following reference environment:
+
+```text
+Python:      3.12.0
+PyTorch:     2.7.1+cu118
+torchvision: 0.22.1+cu118
+CUDA runtime: 11.8
+```
+
+The key package versions from the original experiment server are recorded in [`environment_reference.txt`](environment_reference.txt). `requirements.txt` pins the core Python dependencies used by RIDER, including Albumentations 2.0.6 and the exact OpenAI CLIP Git commit used in the experiments. PyTorch and torchvision are installed separately because their wheels are CUDA/platform specific.
+
+A matching CUDA 11.8 environment can be created with:
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
-pip install -U pip
+conda create -n rider python=3.12 -y
+conda activate rider
+python -m pip install -U pip
+
+pip install torch==2.7.1 torchvision==0.22.1 \
+  --index-url https://download.pytorch.org/whl/cu118
+
 pip install -r requirements.txt
 ```
 
-Install the PyTorch build appropriate for your CUDA environment if the default pip installation is not suitable. Development tests additionally require:
+Development tests additionally require:
 
 ```bash
 pip install -r requirements-dev.txt
 ```
 
-`requirements.txt` records the dependency ranges required by the public implementation. GPU/CUDA/cuDNN differences can introduce small run-to-run differences during retraining; the released checkpoints are the reference models for the reported numbers.
+Other CUDA or CPU builds may work, but the environment above is the tested configuration corresponding to the reported experiments. GPU/CUDA/cuDNN differences can introduce small run-to-run differences during retraining; the released checkpoints are the reference models for the reported numbers.
 
 ## Dataset preparation
 
@@ -76,7 +94,7 @@ Each manifest entry records the split, benchmark source, model, label, relative 
 
 Training and validation contain five generator groups: LDM, ProGAN, SD1.4, SD2.1, and SDXL. The test split contains 20 dataset/model groups: BigGAN, CRN, CycleGAN, DeepFake, FLUX, GauGAN, GPT-Image 1.5, GPT-Image 2.0, IMLE, LDM, ProGAN, SAN, SD1.4, SD2.1, SD3.5, SDXL, SeeingDark, StarGAN, StyleGAN, and StyleGAN2.
 
-See [`datasets/README.md`](datasets/README.md) for source links and preparation notes.
+See [`datasets/README.md`](datasets/README.md) for source links and preparation notes. The exact train/validation/test directory snapshot used on the experiment server is also recorded in [`datasets/dataset_layout.txt`](datasets/dataset_layout.txt), with per-directory image counts in [`datasets/manifests/dataset_directory_counts.csv`](datasets/manifests/dataset_directory_counts.csv).
 
 After arranging the data under `./dataset`, verify file presence:
 

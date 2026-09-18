@@ -28,16 +28,30 @@ Upstream repositories and dataset cards may change over time. The SHA-256 values
 
 ## Expected directory layout
 
+The public layout below is derived from the actual train/validation/test directory tree used on the experiment server:
+
 ```text
 dataset/
 ├── train/
-│   ├── ldm/
-│   │   ├── 0_real/
-│   │   └── 1_fake/
-│   └── progan/<optional-category>/{0_real,1_fake}/
+│   ├── ldm/{0_real,1_fake}/
+│   ├── progan/{car,cat,chair,horse}/{0_real,1_fake}/
+│   ├── sd1.4/{0_real,1_fake}/
+│   ├── sd2.1/{0_real,1_fake}/
+│   └── sdxl/{0_real,1_fake}/
 ├── val/
+│   └── (same five generator groups as train)
 └── test/
+    ├── biggan/{0_real,1_fake}/
+    ├── crn/{0_real,1_fake}/
+    ├── cyclegan/<category>/{0_real,1_fake}/
+    ├── ...
+    ├── stylegan/<category>/{0_real,1_fake}/
+    └── stylegan2/<category>/{0_real,1_fake}/
 ```
+
+The complete directory snapshot is provided in `datasets/dataset_layout.txt`. Per-directory image counts from the same server snapshot are provided in `datasets/manifests/dataset_directory_counts.csv`. Their clean split totals are 159,987 train, 3,197 validation, and 121,384 test images, matching the released benchmark manifest.
+
+Generated robustness directories are intentionally not part of this clean dataset layout; use `scripts/06_prepare_robustness.sh` to construct the 11 public perturbation settings from `dataset/test`.
 
 The released `relative_path` field is relative to its split directory. For example, a manifest row with `split=train` and `relative_path=ldm/0_real/x.jpg` maps to:
 
@@ -48,6 +62,7 @@ dataset/train/ldm/0_real/x.jpg
 ## Released manifests
 
 - `dataset_manifest.csv`: exact retained samples, labels, relative paths, file sizes, and SHA-256 hashes.
+- `dataset_directory_counts.csv`: image counts for each clean train/validation/test leaf directory from the experiment server snapshot.
 - `dataset_counts.csv`: counts by split/source/model.
 - `rider_dataset_counts_per_model.csv`: publication-facing counts by model.
 - `rider_dataset_source_summary.csv`: source-level summary.

@@ -1,0 +1,23 @@
+# RIDER reference environment used for the reported experiments.
+# This file is documentation, not a pip requirements file.
+# Install PyTorch/torchvision separately as shown in README.md, then install requirements.txt.
+
+Python==3.12.0
+torch==2.7.1+cu118
+torchvision==0.22.1+cu118
+CUDA_runtime==11.8
+
+numpy==2.4.6
+pandas==2.2.3
+Pillow==11.2.1
+scikit-learn==1.6.1
+tqdm==4.67.1
+albumentations==2.0.6
+opencv-python-headless==4.11.0.86
+ftfy==6.3.1
+regex==2026.3.32
+packaging==25.0
+PyYAML==6.0.2
+pytest==9.1.1
+
+OpenAI_CLIP_commit=dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1

@@ -64,3 +64,36 @@ def test_final_config_matches_key_reported_settings():
     assert cfg["fusion"]["train_sampler"] == "model_balanced"
     assert cfg["clip_nn"]["k"] == 10
     assert cfg["robustness"]["num_settings"] == 11
+
+
+def test_reference_environment_and_core_requirements():
+    req = (ROOT / "requirements.txt").read_text(encoding="utf-8")
+    env = (ROOT / "environment_reference.txt").read_text(encoding="utf-8")
+
+    assert "albumentations==2.0.6" in req
+    assert "openai/CLIP.git@dcba3cb2e2827b402d2701e7e1c7d9fed8a20ef1" in req
+    assert "torch==" not in req
+    assert "torchvision==" not in req
+
+    assert "Python==3.12.0" in env
+    assert "torch==2.7.1+cu118" in env
+    assert "torchvision==0.22.1+cu118" in env
+    assert "CUDA_runtime==11.8" in env
+
+
+def test_server_directory_counts_match_clean_split_totals():
+    import csv
+
+    counts_path = ROOT / "datasets/manifests/dataset_directory_counts.csv"
+    totals = {"train": 0, "val": 0, "test": 0}
+    with counts_path.open(newline="", encoding="utf-8") as f:
+        for row in csv.DictReader(f):
+            directory = row["directory"]
+            n = int(row["num_images"])
+            for split in totals:
+                if directory.startswith(f"dataset/{split}/"):
+                    totals[split] += n
+                    break
+
+    assert totals == {"train": 159987, "val": 3197, "test": 121384}
+    assert (ROOT / "datasets/dataset_layout.txt").is_file()
