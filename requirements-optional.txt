@@ -1,4 +1,0 @@
-# Only needed for legacy reconstruction-residual experiments, not the final useful3 artifact expert.
-diffusers>=0.25
-transformers>=4.36
-accelerate>=0.25

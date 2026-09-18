@@ -1026,7 +1026,8 @@ ABLATION_PRESET_TO_BRANCHES = {
     # Final compact model selected from the 13-config ablation.
     # This preset intentionally excludes high_freq, compression, spectral_phase,
     # and reconstruction_residual.
-    "useful3": ["spectral_mag", "wavelet", "npr"],
+    "final": ["spectral_mag", "wavelet", "npr"],
+    "useful3": ["spectral_mag", "wavelet", "npr"],  # backward-compatible alias
 }
 
 
@@ -1034,7 +1035,7 @@ def resolve_artifact_branches_for_run(args) -> Tuple[List[str], bool]:
     if args.artifact_branches is not None:
         branches = list(args.artifact_branches)
     else:
-        preset = str(getattr(args, "ablation_preset", "useful3") or "useful3").lower()
+        preset = str(getattr(args, "ablation_preset", "final") or "final").lower()
         if preset not in ABLATION_PRESET_TO_BRANCHES:
             raise ValueError(f"Unknown --ablation_preset: {preset}")
         branches = list(ABLATION_PRESET_TO_BRANCHES[preset])
@@ -1042,7 +1043,7 @@ def resolve_artifact_branches_for_run(args) -> Tuple[List[str], bool]:
     invalid = sorted(set(branches) - set(ALL_ARTIFACT_BRANCHES))
     if invalid:
         raise ValueError(
-            f"Unsupported artifact branches in useful3 version: {invalid}. "
+            f"Unsupported artifact branches in the final three-cue artifact trainer: {invalid}. "
             f"Allowed branches: {list(ALL_ARTIFACT_BRANCHES)}"
         )
 
@@ -1626,11 +1627,11 @@ def compute_val_loss_and_acc(model: nn.Module, val_loader: DataLoader, criterion
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Useful3 artifact-only trainer: spectral_mag + wavelet + npr only")
+    parser = argparse.ArgumentParser(description="Artifact-only trainer: spectral magnitude + wavelet + multi-scale NPR")
     parser.add_argument("--train_root", type=str, default="./dataset/train")
     parser.add_argument("--val_root", type=str, default="./dataset/val")
     parser.add_argument("--test_root", type=str, default="./dataset/test")
-    parser.add_argument("--checkpoint", type=str, default="./checkpoints/v13_artifact_only_minimal.pth")
+    parser.add_argument("--checkpoint", type=str, default="./checkpoints/artifact/artifact_best_full.pth")
     parser.add_argument("--test_only", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--resume_scheduler", action="store_true")
@@ -1667,7 +1668,7 @@ def parse_args():
     parser.add_argument("--artifact_aux_proj_hidden_dim", type=int, default=192)
     parser.add_argument("--artifact_aux_proj_dim", type=int, default=128)
     parser.add_argument("--artifact_aux_dropout", type=float, default=0.05)
-    parser.add_argument("--ablation_preset", type=str, default="useful3", choices=["useful3"])
+    parser.add_argument("--ablation_preset", type=str, default="final", choices=["final", "useful3"], help="Artifact branch preset; useful3 is retained as a backward-compatible alias")
     parser.add_argument("--artifact_branches", nargs="+", default=None, choices=list(ALL_ARTIFACT_BRANCHES))
     parser.add_argument("--npr_scales", nargs="+", type=float, default=[0.25, 0.5, 0.75], help="MS-NPR downsample scales. Use '--npr_scales 0.5' for the original single-scale NPR baseline.")
     parser.set_defaults(raw_artifact_inputs=True)
@@ -1703,8 +1704,8 @@ def main():
     persistent = int(args.num_workers) > 0 and os.name != "nt"
 
     branches, reconstruction_use_fft_residual = resolve_artifact_branches_for_run(args)
-    print(f"[Useful3+B1 MS-NPR] active artifact branches: {branches}")
-    print(f"[Useful3+B1 MS-NPR] npr_scales: {args.npr_scales}")
+    print(f"[Artifact MS-NPR] active artifact branches: {branches}")
+    print(f"[Artifact MS-NPR] npr_scales: {args.npr_scales}")
 
     image_size = validate_image_size(args.image_size)
     train_ds = None

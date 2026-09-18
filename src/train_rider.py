@@ -59,7 +59,7 @@ SEMANTIC_ONLY_SEMANTIC_TOKEN_MASK_PROB_DEFAULT = 0.0
 DEFAULT_PATCH_SHUFFLE_PROB = 0.50
 DEFAULT_NPR_SCALES = (0.25, 0.5, 0.75)
 
-# Useful3+B1 MS-NPR artifact branch set from artifact_only_useful3_msnpr_from_v13.py.
+# Final RIDER artifact branch set: spectral magnitude + wavelet + multi-scale NPR.
 DEFAULT_ARTIFACT_BRANCHES = ("spectral_mag", "wavelet", "npr")
 ALL_ARTIFACT_BRANCHES = (
     "spectral_mag",
@@ -2954,7 +2954,7 @@ def main():
     unsupported_branches = sorted(set(artifact_branches) - set(ALL_ARTIFACT_BRANCHES))
     if unsupported_branches:
         raise ValueError(
-            f"Artifact checkpoint/args use unsupported branches for useful3 fusion: {unsupported_branches}. "
+            f"Artifact checkpoint/args use unsupported branches for final RIDER fusion: {unsupported_branches}. "
             f"Expected branches from {list(ALL_ARTIFACT_BRANCHES)}."
         )
     npr_scales = args.npr_scales or artifact_meta.get("npr_scales") or list(DEFAULT_NPR_SCALES)
@@ -2964,7 +2964,7 @@ def main():
     if "reconstruction_residual" in artifact_branches and not args.reconstruction_vae_path:
         raise ValueError("The artifact checkpoint uses reconstruction_residual, so --reconstruction_vae_path is required at runtime.")
 
-    print(f"[Original fusion + new branches] artifact_branches={artifact_branches}, npr_scales={npr_scales}")
+    print(f"[RIDER fusion] artifact_branches={artifact_branches}, npr_scales={npr_scales}")
 
     train_ds = None
     if args.phase == "train":

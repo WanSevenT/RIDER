@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Phase-II training using the full Phase-I checkpoints produced by
+# scripts/01_train_semantic.sh and scripts/02_train_artifact.sh.
+python src/train_rider.py \
+  --phase train \
+  --train_root ./dataset/train \
+  --val_root ./dataset/val \
+  --test_root ./dataset/test \
+  --semantic_checkpoint ./checkpoints/semantic/semantic_best_full.pth \
+  --artifact_checkpoint ./checkpoints/artifact/artifact_best_full.pth \
+  --checkpoint ./checkpoints/rider_from_scratch/best.pth \
+  --save_dir ./checkpoints/rider_from_scratch/reports \
+  --metrics_json ./checkpoints/rider_from_scratch/metrics.json \
+  --epoch_metrics_json ./checkpoints/rider_from_scratch/epoch_test_metrics.json \
+  --epoch_test_text_log ./checkpoints/rider_from_scratch/epoch_test_by_model.txt \
+  --freeze_loaded_branches \
+  --epochs 20 \
+  --batch_size 128 \
+  --num_workers 4 \
+  --device cuda:0 \
+  --use_amp \
+  --amp_dtype bf16 \
+  --threshold_metric macro_accuracy \
+  --checkpoint_selection fixed05 \
+  --macro_loss_weight 1.0 \
+  --sample_loss_weight 0.0 \
+  --gate_reg_weight 0.0 \
+  --bias_reg_weight 0.002 \
+  --regret_weight 0.5 \
+  --branch_consistency_weight 0.10 \
+  --router_supervision_weight 1.0 \
+  --router_target_mode model_macroacc \
+  --regret_target_mode model_macroacc \
+  --fusion_mix_space clipped_logit \
+  --semantic_logit_clip 5.0 \
+  --artifact_logit_clip 3.0 \
+  --output_mix_mode learned_gate_with_semantic_safety \
+  --semantic_safe_semantic_prob_threshold 0.50 \
+  --semantic_safe_artifact_prob_threshold 0.30 \
+  --artifact_branches spectral_mag wavelet npr \
+  --npr_scales 0.25 0.5 0.75 \
+  --enable_artifact_failure_simulator \
+  --artifact_failure_mode opposite_semantic \
+  --artifact_failure_prob 0.35 \
+  --artifact_failure_bias_min 4.0 \
+  --artifact_failure_bias_max 8.0 \
+  --artifact_failure_feature_dropout 0.5 \
+  --artifact_failure_attention_prob 0.5 \
+  --artifact_failure_attention_strength 0.7 \
+  --artifact_failure_gate_weight 0.5 \
+  --artifact_failure_consistency_weight 0.2 \
+  --disagreement_safe_weight 0.5 \
+  --disagreement_margin 0.3 \
+  --train_sampler model_balanced \
+  --use_clip_nn_fusion \
+  --clip_nn_train_csv ./checkpoints/clip_nn_vitl14_k10_m500/clip_nn_train.csv \
+  --clip_nn_val_csv ./checkpoints/clip_nn_vitl14_k10_m500/clip_nn_val.csv \
+  --clip_nn_test_csv ./checkpoints/clip_nn_vitl14_k10_m500/clip_nn_test.csv \
+  --clip_nn_score_column clip_nn_logit \
+  --clip_nn_logit_clip 2.0

@@ -39,7 +39,7 @@ def process(src_path, dst_path, corruption, strength):
     dst_path.parent.mkdir(parents=True, exist_ok=True)
 
     if corruption == "jpeg":
-        # JPEG 会统一保存为 .jpg
+        # JPEG outputs are normalized to the .jpg suffix
         img.save(dst_path.with_suffix(".jpg"), quality=int(strength), subsampling=2)
         return
 
@@ -54,7 +54,7 @@ def process(src_path, dst_path, corruption, strength):
     else:
         raise ValueError(f"Unknown corruption: {corruption}")
 
-    # 非 JPEG 扰动保持原后缀
+    # Non-JPEG perturbations keep the original suffix
     img.save(dst_path)
 
 def main():
@@ -65,19 +65,35 @@ def main():
                         choices=["jpeg", "resize", "blur", "noise", "crop"])
     parser.add_argument("--strength", required=True)
     parser.add_argument("--skip_existing", action="store_true")
+    parser.add_argument("--seed", type=int, default=None,
+                        help="Optional NumPy RNG seed for deterministic Gaussian-noise generation")
+    parser.add_argument("--include_top_dirs", nargs="*", default=None,
+                        help="Optional top-level directories to include under --src_root")
     args = parser.parse_args()
+
+    if args.seed is not None:
+        np.random.seed(args.seed)
 
     src_root = Path(args.src_root)
     dst_root = Path(args.dst_root)
 
     count = 0
     skipped = 0
+    filtered = 0
+    include_top_dirs = set(args.include_top_dirs or [])
 
-    for src_path in src_root.rglob("*"):
+    paths = src_root.rglob("*")
+    if args.seed is not None:
+        paths = sorted(paths)
+
+    for src_path in paths:
         if src_path.suffix.lower() not in IMG_EXTS:
             continue
 
         rel = src_path.relative_to(src_root)
+        if include_top_dirs and (not rel.parts or rel.parts[0] not in include_top_dirs):
+            filtered += 1
+            continue
         dst_path = dst_root / rel
 
         if args.corruption == "jpeg":
@@ -92,7 +108,8 @@ def main():
         process(src_path, dst_path, args.corruption, args.strength)
         count += 1
 
-    print(f"[DONE] {args.corruption}-{args.strength}: processed={count}, skipped={skipped}, dst={dst_root}")
+    seed_msg = "none" if args.seed is None else str(args.seed)
+    print(f"[DONE] {args.corruption}-{args.strength}: processed={count}, skipped={skipped}, filtered={filtered}, seed={seed_msg}, dst={dst_root}")
 
 if __name__ == "__main__":
     main()

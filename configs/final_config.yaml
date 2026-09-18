@@ -1,52 +1,120 @@
-# Reference snapshot of the final RIDER configuration.
-# The executable commands are in scripts/*.sh.
+# Public snapshot of the final RIDER configuration.
+# Executable commands are provided in scripts/*.sh.
+
 experiment:
   seed: 42
   reported_macro_acc: 87.48
   reported_macro_ap: 95.26
+  test_dataset_groups: 20
+  unseen_dataset_groups: 15
+
 semantic:
   backbone: ViT-L/14
-  epochs: 5
   image_size: 224
+  epochs: 5
   batch_size: 32
+  num_workers: 8
   finetune_last_n: 1
   clip_lr: 1.0e-5
   classifier_lr: 1.0e-7
-  patch_shuffle_prob: 0.0
+  hard_mining_dynamic_boost: 0.0
   semantic_dropout: 0.0
   semantic_token_mask_prob: 0.0
+  patch_shuffle_prob: 0.0
+  threshold_metric: macro_balanced_acc
+  use_amp: true
+  amp_dtype: bf16
+  save_test_interval: 5
+
 artifact:
-  epochs: 20
   image_size: 224
+  epochs: 20
   batch_size: 16
+  num_workers: 8
+  base_lr: 1.0e-4
+  checkpoint_metric: macro_accuracy
+  threshold_metric: macro_accuracy
   branches: [spectral_mag, wavelet, npr]
   npr_scales: [0.25, 0.5, 0.75]
   normalized_artifact_inputs: true
-  base_lr: 1.0e-4
   supcon_weight: 0.05
   domain_adv_weight: 0.05
   hard_mining_dynamic_boost: 2.0
+  periodic_eval_interval: 1
+
 clip_nn:
+  backbone: ViT-L/14
+  batch_size: 128
+  num_workers: 8
   k: 10
   max_per_model_class: 500
   tau: 40.0
   bias: 0.0
+  score_column: clip_nn_logit
+  logit_clip: 2.0
+
 fusion:
+  freeze_loaded_branches: true
   epochs: 20
   selected_epoch: 4
   batch_size: 128
+  num_workers: 4
+  device: cuda:0
+  use_amp: true
+  amp_dtype: bf16
+  threshold_metric: macro_accuracy
   checkpoint_selection: fixed05
+
   macro_loss_weight: 1.0
   sample_loss_weight: 0.0
+  gate_reg_weight: 0.0
   bias_reg_weight: 0.002
   regret_weight: 0.5
   branch_consistency_weight: 0.10
   router_supervision_weight: 1.0
   router_target_mode: model_macroacc
   regret_target_mode: model_macroacc
+
   mix_space: clipped_logit
   semantic_logit_clip: 5.0
   artifact_logit_clip: 3.0
   output_mix_mode: learned_gate_with_semantic_safety
   semantic_safe_semantic_prob_threshold: 0.50
   semantic_safe_artifact_prob_threshold: 0.30
+
+  artifact_branches: [spectral_mag, wavelet, npr]
+  npr_scales: [0.25, 0.5, 0.75]
+
+  artifact_failure_simulator: true
+  artifact_failure_mode: opposite_semantic
+  artifact_failure_prob: 0.35
+  artifact_failure_bias_min: 4.0
+  artifact_failure_bias_max: 8.0
+  artifact_failure_feature_dropout: 0.5
+  artifact_failure_attention_prob: 0.5
+  artifact_failure_attention_strength: 0.7
+  artifact_failure_gate_weight: 0.5
+  artifact_failure_consistency_weight: 0.2
+
+  disagreement_safe_weight: 0.5
+  disagreement_margin: 0.3
+  train_sampler: model_balanced
+
+  use_clip_nn_fusion: true
+  clip_nn_score_column: clip_nn_logit
+  clip_nn_logit_clip: 2.0
+
+robustness:
+  benchmark_groups: [ldm, sd1.4, sd2.1, sdxl, sd3.5, flux, gpt-image1.5, gpt-image2.0]
+  settings:
+    jpeg_quality: [95, 75, 50]
+    resize_ratio: [0.75, 0.50]
+    gaussian_blur_radius: [3, 5]
+    gaussian_noise_sigma: [5, 10]
+    center_crop_ratio: [0.90, 0.75]
+  num_settings: 11
+  aggregation: equal_mean_over_five_perturbation_families
+  reported_average_acc: 83.11
+  reported_average_ap: 90.75
+  historical_noise_rng_seed_recorded: false
+  deterministic_replication_seed: 42

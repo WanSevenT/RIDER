@@ -1,48 +1,46 @@
 # RIDER: Reliability-Informed Dual-Expert Routing for AI-Generated Image Detection
 
-RIDER is a two-stage AI-generated image detector designed for cross-generator generalization and robustness to common image degradations. It independently learns complementary semantic and artifact experts, calibrates their predictions, and routes between them using input-dependent reliability cues.
+RIDER is a two-stage detector for AI-generated images designed for cross-generator generalization and robustness to common image degradations. It combines a semantic forensic expert based on CLIP ViT-L/14 with an artifact forensic expert based on spectral magnitude, Haar wavelet, and multi-scale NPR cues. The experts are trained independently in Phase I. In Phase II, their logits are calibrated and combined by reliability-informed soft routing with CLIP-NN support.
 
-This release is organized around the confirmed final checkpoint set corresponding to the paper result of **87.48% macro ACC / 95.26% macro AP** on the 20-dataset evaluation. The robustness protocol contains **11 perturbation settings** and reports **83.11% average ACC / 90.75% average AP**.
+The released checkpoint set corresponds to the reported result of **87.48% macro ACC / 95.26% macro AP** over the 20-dataset test benchmark.
 
-## Release contents
+## Results
+
+| Evaluation | Macro ACC | Macro AP |
+|---|---:|---:|
+| Full test benchmark (20 datasets) | 87.48 | 95.26 |
+| Unseen datasets (15 datasets) | 85.33 | 94.14 |
+| Robustness average (11 perturbation settings) | 83.11 | 90.75 |
+| Semantic expert | 85.02 | 93.82 |
+| Artifact expert | 79.15 | 85.95 |
+
+Detailed paper-level summaries are provided in:
 
 ```text
-RIDER-release/
-├── README.md
-├── .gitignore
-├── requirements.txt
-├── requirements-optional.txt
-├── configs/final_config.yaml
-├── src/
-│   ├── train_semantic.py
-│   ├── train_artifact.py
-│   ├── generate_clip_nn_scores.py
-│   └── train_rider.py
-├── rider/checkpoint.py
-├── scripts/
-│   ├── 01_train_semantic.sh
-│   ├── 02_train_artifact.sh
-│   ├── 03_generate_clip_nn.sh
-│   ├── 04_train_rider.sh
-│   └── 05_eval_rider.sh
-├── datasets/
-│   ├── README.md
-│   └── manifests/
-├── weights/
-├── experiments/
-│   ├── semantic_ablation/
-│   └── artifact_ablation/
-├── results/
-│   ├── main_results.csv
-│   ├── ablation_results.csv
-│   └── robustness_results.csv
-├── tools/
-└── tests/
+results/main_results.csv
+results/ablation_results.csv
+results/robustness_results.csv
 ```
 
-The `src/` files preserve the supplied experimental implementations. `src/train_rider.py` has only two release-compatibility additions: support for `semantic_best.pth`'s CLIP delta format and for metadata stored in the compact artifact checkpoint.
+## Repository structure
+
+```text
+RIDER/
+├── configs/        # Final configuration snapshot
+├── datasets/       # Dataset documentation and exact sample manifests
+├── experiments/    # Controlled ablation configurations
+├── results/        # Paper-level result summaries
+├── rider/          # Checkpoint loading utilities
+├── scripts/        # Training, evaluation, and robustness entry points
+├── src/            # Main implementation
+├── tests/          # Repository validation tests
+├── tools/          # Dataset, checkpoint, and robustness utilities
+└── weights/        # Released compact checkpoints
+```
 
 ## Installation
+
+Create an environment and install the required packages:
 
 ```bash
 python -m venv .venv
@@ -51,23 +49,52 @@ pip install -U pip
 pip install -r requirements.txt
 ```
 
-For CUDA, install the PyTorch build appropriate for your driver/CUDA environment if the generic pip wheel is not suitable. The final RIDER configuration does not require `diffusers`; legacy reconstruction-residual experiments can install `requirements-optional.txt`.
+Install the PyTorch build appropriate for your CUDA environment if the default pip installation is not suitable. Development tests additionally require:
 
-## Dataset
+```bash
+pip install -r requirements-dev.txt
+```
 
-The original images are not redistributed. Prepare the public source datasets and reproduce the exact retained sample set using `datasets/manifests/dataset_manifest.csv`. See `datasets/README.md`.
+`requirements.txt` records the dependency ranges required by the public implementation. GPU/CUDA/cuDNN differences can introduce small run-to-run differences during retraining; the released checkpoints are the reference models for the reported numbers.
 
-Quick validation:
+## Dataset preparation
+
+The original benchmark images are **not redistributed** in this repository. RIDER uses a unified benchmark assembled from public sources. The exact retained sample set is specified by:
+
+```text
+datasets/manifests/dataset_manifest.csv
+```
+
+Each manifest entry records the split, benchmark source, model, label, relative path, file size, and SHA-256 hash.
+
+| Split | Real | Fake | Total |
+|---|---:|---:|---:|
+| Train | 79,987 | 80,000 | 159,987 |
+| Validation | 1,597 | 1,600 | 3,197 |
+| Test | 60,677 | 60,707 | 121,384 |
+| **Total** | **142,261** | **142,307** | **284,568** |
+
+Training and validation contain five generator groups: LDM, ProGAN, SD1.4, SD2.1, and SDXL. The test split contains 20 dataset/model groups: BigGAN, CRN, CycleGAN, DeepFake, FLUX, GauGAN, GPT-Image 1.5, GPT-Image 2.0, IMLE, LDM, ProGAN, SAN, SD1.4, SD2.1, SD3.5, SDXL, SeeingDark, StarGAN, StyleGAN, and StyleGAN2.
+
+See [`datasets/README.md`](datasets/README.md) for source links and preparation notes.
+
+After arranging the data under `./dataset`, verify file presence:
 
 ```bash
 python tools/verify_dataset.py --root ./dataset
 ```
 
-The exact released split contains 159,987 train, 3,197 validation, and 121,384 test images.
+For exact SHA-256 verification:
 
-## Pretrained weights
+```bash
+python tools/verify_dataset.py \
+  --root ./dataset \
+  --check_sha256
+```
 
-Compact weights are included in `weights/` for this draft release. Their required loading order is:
+## Released checkpoints
+
+The compact checkpoints used for the reported RIDER model are included in `weights/` and must be applied in the following order:
 
 ```text
 OpenAI CLIP ViT-L/14
@@ -79,58 +106,190 @@ artifact_best.pth
 fusion_best.pth
 ```
 
-The fusion checkpoint must be applied last because it contains the Phase-II-updated artifact BatchNorm buffers. Check file hashes with:
+`fusion_best.pth` must be applied last because it contains the Phase-II-updated artifact BatchNorm running buffers in addition to fusion-specific parameters.
+
+```text
+weights/semantic_best.pth
+weights/artifact_best.pth
+weights/fusion_best.pth
+```
+
+Verify the checkpoint files on Linux/macOS with:
 
 ```bash
-sha256sum -c weights/checksums.sha256
+(cd weights && sha256sum -c checksums.sha256)
 ```
+
+## Evaluation with released checkpoints
+
+First generate the CLIP-NN scores:
+
+```bash
+bash scripts/03_generate_clip_nn.sh
+```
+
+Then evaluate the released RIDER checkpoint:
+
+```bash
+bash scripts/05_eval_rider.sh
+```
+
+Generated evaluation outputs are written to `outputs/eval/` and are ignored by Git. The reported ACC protocol uses a fixed decision threshold of 0.5.
 
 ## Training
 
-Run the four stages in order:
+### Phase I: semantic expert
+
+```bash
+bash scripts/01_train_semantic.sh
+```
+
+Final semantic configuration:
+
+```text
+Backbone:              CLIP ViT-L/14
+Input resolution:      224 × 224
+Trainable CLIP layers: final visual Transformer block + visual LayerNorm
+Epochs:                5
+Patch shuffle:         disabled
+```
+
+### Phase I: artifact expert
+
+```bash
+bash scripts/02_train_artifact.sh
+```
+
+Final artifact configuration:
+
+```text
+Input resolution:      224 × 224
+Artifact cues:         spectral magnitude + Haar wavelet + MS-NPR
+NPR scales:            0.25, 0.5, 0.75
+Epochs:                20
+Artifact inputs:       normalized
+```
+
+### CLIP-NN scores
+
+```bash
+bash scripts/03_generate_clip_nn.sh
+```
+
+Final CLIP-NN configuration:
+
+```text
+Backbone:                       CLIP ViT-L/14
+k:                              10
+Maximum samples/model/class:    500
+tau:                            40
+bias:                           0
+```
+
+### Phase II with released Phase-I experts
+
+To reproduce the Phase-II training stage while keeping the released Phase-I experts fixed at their published checkpoints:
+
+```bash
+bash scripts/04_train_rider.sh
+```
+
+### Full retraining pipeline
+
+To retrain the Phase-I experts first and then use those newly trained checkpoints in Phase II:
 
 ```bash
 bash scripts/01_train_semantic.sh
 bash scripts/02_train_artifact.sh
 bash scripts/03_generate_clip_nn.sh
-bash scripts/04_train_rider.sh
+bash scripts/04_train_rider_from_scratch.sh
 ```
 
-The final configuration uses:
+During Phase II, gradient updates to the loaded expert learnable parameters are disabled. Artifact BatchNorm running statistics can still update and are therefore stored in the final fusion checkpoint.
 
-- Semantic expert: CLIP ViT-L/14, 224×224, final visual Transformer block + LayerNorm, 5 epochs, patch shuffle disabled.
-- Artifact expert: 224×224, spectral magnitude + Haar wavelet + MS-NPR, scales {0.25, 0.5, 0.75}, 20 epochs.
-- CLIP-NN: k=10, at most 500 samples per generator/class, tau=40.
-- Phase II: expert parameter gradients disabled; router trained up to 20 epochs; final selected checkpoint is epoch 4.
+The complete public configuration snapshot is in:
 
-The artifact launch script explicitly uses `--normalized_artifact_inputs` to match the final RIDER path.
+```text
+configs/final_config.yaml
+```
 
-## Evaluation
+## Ablation experiments
 
-Generate CLIP-NN scores for your prepared data first, then run:
+Controlled ablation configurations corresponding to the manuscript are provided under:
+
+```text
+experiments/semantic_ablation/
+experiments/artifact_ablation/
+```
+
+The aggregate reported values are stored in:
+
+```text
+results/ablation_results.csv
+```
+
+Included semantic-training variants are Frozen CLIP, Last Block + LayerNorm, and Last Two Blocks. Included artifact-cue variants are Spectral + Haar, Spectral + Haar + Single-Scale NPR, Spectral + Haar + MS-NPR, and the Large Six-Cue Model.
+
+Generated ablation checkpoints, logs, and per-image outputs are not committed.
+
+## Robustness evaluation
+
+The robustness benchmark uses Diffusion/T2I-8: LDM, SD1.4, SD2.1, SDXL, SD3.5, FLUX, GPT-Image 1.5, and GPT-Image 2.0. Eleven perturbation settings are evaluated across five perturbation families:
+
+```text
+JPEG quality:          95, 75, 50
+Resize ratio:          0.75, 0.50
+Gaussian blur setting: 3, 5
+Gaussian noise sigma:  5, 10
+Center-crop ratio:     0.90, 0.75
+```
+
+The released perturbation generator passes blur settings 3 and 5 to Pillow's `ImageFilter.GaussianBlur(radius=...)` implementation.
+
+Utilities are provided in:
+
+```text
+tools/make_robust_testsets.py
+tools/summarize_robust_metrics.py
+```
+
+A convenience script selects the eight robustness groups directly from `dataset/test` and prepares all 11 settings:
 
 ```bash
-bash scripts/03_generate_clip_nn.sh
-bash scripts/05_eval_rider.sh
+SRC_ROOT=./dataset/test \
+DST_ROOT=./dataset/robust \
+SEED=42 \
+bash scripts/06_prepare_robustness.sh
 ```
 
-The evaluation script uses the fixed 0.5 operating point for the reported ACC protocol and writes generated JSON files under `outputs/eval/`. Generated outputs are ignored by Git so that `results/` remains a compact set of paper-level summaries.
+The historical robustness run did not record a NumPy RNG seed for the Gaussian-noise image generation step. The `--seed` option in the public utility therefore provides a deterministic protocol replica, but regenerated noise images are not guaranteed to be bitwise identical to the historical noise realization used for the reported table. JPEG, resize, blur, and crop settings are deterministic for fixed library versions and inputs.
 
-## Results and ablations
+The paper-level robustness summary is provided in:
 
-To keep the repository close to the style of compact CVPR/ICML code releases, `results/` contains only three paper-level CSV files:
+```text
+results/robustness_results.csv
+```
 
-- `results/main_results.csv`: headline full-test, unseen-dataset, perturbation, and final expert results.
-- `results/ablation_results.csv`: the ablation values reported in the current manuscript.
-- `results/robustness_results.csv`: the robustness summary used by the paper.
+## Reproducibility notes
 
-Ablation launch commands and config snapshots live under `experiments/`, rather than `results/`. Raw logs, per-image predictions, epoch outputs, and earlier protocol snapshots are not committed.
+The released checkpoints and exact dataset manifest are the reference assets for evaluating the reported model. Retraining scripts reproduce the documented training protocol, but GPU/CUDA/cuDNN kernels and other implementation-level nondeterminism can cause small numerical differences across systems.
 
-## Check release integrity
+For dataset identity, use the SHA-256 hashes in `datasets/manifests/dataset_manifest.csv` rather than relying only on filenames or mutable upstream dataset revisions.
+
+## Checkpoint and repository validation
+
+Inspect checkpoint metadata:
 
 ```bash
-python tools/inspect_release.py
-python -m pytest tests/test_release_assets.py
+python tools/inspect_checkpoints.py
 ```
 
+Run the repository tests:
 
+```bash
+python -m pytest -q tests/test_repository_assets.py
+```
+
+## Third-party components
+
+RIDER depends on third-party software and public datasets that remain subject to their respective licenses and terms. See [`THIRD_PARTY.md`](THIRD_PARTY.md) for details.
