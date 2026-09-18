@@ -133,10 +133,4 @@ python tools/inspect_release.py
 python -m pytest tests/test_release_assets.py
 ```
 
-## License
 
-No software license is included in this draft package. Until a license is added, normal copyright rules apply; public users do not automatically receive permission to modify or redistribute the code. Before a public release, choose a license that is compatible with your institution/project policy and the third-party components you depend on.
-
-## Citation
-
-Citation information can be added after publication or de-anonymization.
