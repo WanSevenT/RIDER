@@ -1,5 +1,7 @@
 # RIDER: Reliability-Informed Dual-Expert Routing for AI-Generated Image Detection
-
+<p align="center">
+  <img src="Fig1_recent_generators.png" alt="RIDER Figure 1" width="700">
+</p>
 RIDER is a two-stage detector for AI-generated images designed for cross-generator generalization and robustness to common image degradations. It combines a semantic forensic expert based on CLIP ViT-L/14 with an artifact forensic expert based on spectral magnitude, Haar wavelet, and multi-scale NPR cues. The experts are trained independently in Phase I. In Phase II, their logits are calibrated and combined by reliability-informed soft routing with CLIP-NN support.
 
 The released checkpoint set corresponds to the reported result of **87.48% macro ACC / 95.26% macro AP** over the 20-dataset test benchmark.
